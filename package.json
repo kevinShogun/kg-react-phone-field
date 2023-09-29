@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -35,8 +35,20 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/kevinShogun/kg-react-phone-field"
   },
+  "keywords": [
+    "react",
+    "react-component",
+    "react-phone-number-input",
+    "phone",
+    "phone-number",
+    "phone-field",
+    "phone-input",
+    "phone-number-input",
+    "react-phone-field",
+    "react-phone-input"
+  ],
   "name": "kg-react-phone-field",
   "author": "Kevin Garcia",
   "module": "dist/kg-react-phone-field.esm.js",
@@ -58,6 +70,7 @@
     "husky": "^8.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-test-renderer": "^18.2.0",
     "size-limit": "^9.0.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.6.2",
