@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {
   getCountries,
   getCountryCallingCode,
@@ -5,7 +6,6 @@ import {
 } from 'react-phone-number-input';
 import es from 'react-phone-number-input/locale/es.json';
 import en from 'react-phone-number-input/locale/en.json';
-import _ from 'lodash';
 
 export const sortedCountries = (
   countries: Country[],
