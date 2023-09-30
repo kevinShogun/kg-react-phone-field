@@ -1,8 +1,12 @@
-import React from "react"
+import React from 'react'
+import Select, { ActionMeta, StylesConfig } from 'react-select';
+import makeAnimated from 'react-select/animated';
+
+
 import { PropsList, listCountriesCodes } from "../utils/getCountries"
 
 interface SelectPhoneNumberProps {
-    onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void
+    onChange?: ((newValue: unknown, actionMeta: ActionMeta<unknown>) => void) | React.ChangeEventHandler<HTMLSelectElement>;
     value?: string
     listOfProperties: PropsList,
     defaultCountryNumber: number,
@@ -10,6 +14,16 @@ interface SelectPhoneNumberProps {
     selectClassName?: string,
     defaultStyles?: boolean,
     language?: 'en' | 'es',
+    label?: string,
+    labelClassName?: string,
+    /*** React Select Props */
+    withReactSelect?: boolean,
+    reactSelectCustomStyles?: StylesConfig,
+    reactSelectDefaultValues?: {
+        label: string,
+        value: unknown,
+    },
+    
 }
 
 const stylesContainer = {
@@ -29,69 +43,92 @@ const stylesSelect = {
     height: '100%',
     fontSize: '1rem',
     border: 'none',
+    cursor: 'pointer',
     outline: 'none',
 }
 export const SelectPhoneNumber = ({
     defaultCountryNumber, onChange, value,
     listOfProperties, containerClassName,
-    selectClassName, defaultStyles = true, language = 'es'
+    selectClassName, defaultStyles = true, language = 'es',
+    label, labelClassName,
+    reactSelectCustomStyles,
+    reactSelectDefaultValues,
+    withReactSelect = false,
 }: SelectPhoneNumberProps) => {
 
-    /**
-     * Renders a dropdown select input for selecting a phone number.
-     * 
-     * @param {number} defaultCountryNumber - The default country number to be pre-selected in the select input.
-     * @param {function} onChange - A callback function to be called when the selected value in the select input changes.
-     * @param {string} value - The currently selected value in the select input.
-     * @param {array} listOfProperties - An array of property names to be displayed as options in the select input.
-     * @param {string} containerClassName - The CSS class name for the container div element.
-     * @param {string} selectClassName - The CSS class name for the select input element.
-     * @param {boolean} defaultStyles - Determines whether to apply default styles to the container and select elements. Default is true.
-     * @param {string} language - The language code ('en' or 'es') used to display the country names in the select input. Default is 'es'.
-     * 
-     * @returns {JSX.Element} - The rendered JSX elements representing the select input and its options.
-     */
-    return (
-        <div
-            style={defaultStyles ? stylesContainer : {}}
-            className={containerClassName}
-        >
-            <select
-                style={defaultStyles ? stylesSelect : {}}
-                className={selectClassName}
-                value={value}
-                onChange={e => {
-                    if (e.target.value) {
-                        if (typeof onChange === 'function') onChange(e)
-                    }
-                }}
-            >
-                {
-                    listCountriesCodes(listOfProperties, defaultCountryNumber, language).map((country) => {
-                        if (country) {
-                            switch (listOfProperties.length) {
-                                case 1:
-                                    return <option value={country[listOfProperties[0]]}>{
-                                        country[listOfProperties[0]]
-                                    }</option>
-                                case 2:
-                                    return <option value={country[listOfProperties[0]]}>{
-                                        country[listOfProperties[0]]
-                                    } ( + {country[listOfProperties[1]]} )</option>
-                                case 3:
-                                    return <option value={country[listOfProperties[0]]}>{
-                                        country[listOfProperties[0]]
-                                    } ({country[listOfProperties[1]]}) +{country[listOfProperties[2]]}</option>
-                            }
-                        }else{
-                            return <option value={''}>{''}</option>
-                        }
-                    })
-                }
-            </select>
+    const list = listCountriesCodes(listOfProperties, defaultCountryNumber, language);
+    const options = list.map((country) => {
+        if (country) return { label: country[listOfProperties[0]], value: country }
+        else return null;
+    });
+    const animatedComponents = makeAnimated();
 
-        </div>
-    )
+    if (withReactSelect) {
+        return (
+            <Select
+                options={options}
+                onChange={() => {
+                    if (typeof onChange === 'function') onChange
+                }}
+                components={animatedComponents}
+                styles={reactSelectCustomStyles}
+                defaultValue={reactSelectDefaultValues}
+            />
+        )
+    } else {
+        return (
+            <div
+                style={defaultStyles ? stylesContainer : {}}
+                className={containerClassName}
+            >
+                <label
+                    style={
+                        defaultStyles ? {
+                            fontSize: '1rem',
+                            fontWeight: 'bold',
+                            lineHeight: '1.5rem',
+                        } : {}}react-select
+                    className={labelClassName}
+                >
+                    {label}
+                    <select
+                        style={defaultStyles ? stylesSelect : {}}
+                        className={selectClassName}
+                        value={value}
+
+                    >
+                        {
+                            listCountriesCodes(listOfProperties, defaultCountryNumber, language).map((country, index) => {
+                                if (country) {
+                                    switch (listOfProperties.length) {
+                                        case 1:
+                                            return <option
+                                                key={`${country[listOfProperties[0]]}__${index}`}
+                                                value={country[listOfProperties[0]]}>{
+                                                    country[listOfProperties[0]]
+                                                }</option>
+                                        case 2:
+                                            return <option
+                                                key={`${country[listOfProperties[0]]}__${index}`}
+                                                value={country[listOfProperties[0]]}>{
+                                                    country[listOfProperties[0]]
+                                                } ( + {country[listOfProperties[1]]} )</option>
+                                        case 3:
+                                            return <option
+                                                key={`${country[listOfProperties[0]]}__${index}`}
+                                                value={country[listOfProperties[0]]}>{
+                                                    country[listOfProperties[0]]
+                                                } ({country[listOfProperties[1]]}) +{country[listOfProperties[2]]}</option>
+                                    }
+                                }
+                                else return null
+                            })
+                        }
+                    </select>
+                </label>
+            </div>
+        )
+    }
 }
 
 export default SelectPhoneNumber

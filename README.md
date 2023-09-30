@@ -1,62 +1,61 @@
 ## Resumen
-Este código define un componente funcional de React llamado `SelectPhoneNumber` que muestra una entrada desplegable para seleccionar un número de teléfono. Toma varios props incluyendo el número de país por defecto, una función de callback onChange, el valor actualmente seleccionado, un array de nombres de propiedades a mostrar como opciones, nombres de clases CSS para estilizar, un flag para determinar si aplicar estilos por defecto, y el código de idioma para mostrar los nombres de los países. El componente utiliza la función `listCountriesCodes` para generar las opciones de la entrada de selección basándose en las propiedades y el idioma proporcionados. Cuando cambia el valor seleccionado, se llama a la llamada de retorno onChange con el nuevo valor.
+Este código define un componente React llamado `SelectPhoneNumber` que renderiza un menú desplegable para seleccionar un número de teléfono. El componente usa la biblioteca  `react-select` si asi se desea para crear el menú desplegable. Toma varias propiedades, incluyendo el número de teléfono del país predeterminado, una lista de propiedades a mostrar en las opciones del menú desplegable y opciones de estilo y personalización opcionales.
 
-## Ejemplo de uso
+## Ejemplo de uso con `react-select`
 ```javascript
-import React from "react";
-import SelectPhoneNumber from "./SelectPhoneNumber";
-
-const App = () => {
-  const handlePhoneNumberChange = (event) => {
-    console.log("Selected phone number:", event.target.value);
-  };
-
-  return (
-    <div>
-      <h1>Phone Number Selector</h1>
-      <SelectPhoneNumber
-        defaultCountryNumber={506}
-        onChange={handlePhoneNumberChange}
-        value=""
-        listOfProperties={["label"]}
-        containerClassName="phone-number-container"
-        selectClassName="phone-number-select"
-        defaultStyles={true}
-        language="en"
-      />
-    </div>
-  );
-};
-
-export default App;
+<SelectPhoneNumber
+  defaultCountryNumber={506}
+  listOfProperties={['nameCodeNumber']}
+  language="es"
+  label="Seleccionar país"
+  withReactSelect={true}
+  reactSelectCustomStyles={{ color: 'blue' }}
+  reactSelectDefaultValues={{ label: 'Predeterminado', value: 'default' }}
+/>
 ```
 
-## Code Analysis
-### Inputs
-- `defaultCountryNumber` (number): El número de país predeterminado que se preseleccionará en la entrada de selección.
-- `onChange` (function): Una función de llamada de retorno que se ejecutará cuando cambie el valor seleccionado en la entrada de selección.
-- `value` (string): El valor seleccionado actualmente en la entrada de selección.
-- `listOfProperties` (array): Una matriz de nombres de propiedades que se mostrarán como opciones en la entrada de selección.
-- `containerClassName` (string): El nombre de la clase CSS para el elemento div contenedor.
-- `selectClassName` (string): El nombre de la clase CSS para el elemento select input.
-- `defaultStyles` (boolean): Determina si se aplican estilos por defecto a los elementos contenedor y de selección. Por defecto es true.
-- `language` (string): El código de idioma ("en" o "es") utilizado para mostrar los nombres de los países en la entrada de selección. Por defecto es 'es'.
-___
-### Flow
-1. El componente `SelectPhoneNumber` se define como un componente funcional que incluye varios accesorios.
-2. El componente representa un elemento `<div>` como contenedor para la entrada seleccionada.
-3. El elemento contenedor tiene estilos aplicados según la propiedad `defaultStyles`.
-4. Dentro del contenedor, un elemento `<select>` se representa como entrada de selección.
-5. La entrada seleccionada tiene estilos aplicados según la propiedad `defaultStyles`.
-6. El valor de la entrada seleccionada se establece en la propiedad `value` y se adjunta un controlador de eventos `onChange`.
-7. Cuando el valor de la entrada seleccionada cambia, se llama a la devolución de llamada `onChange` con el nuevo valor.
-8. Las opciones para la entrada seleccionada se generan llamando a la función `listCountriesCodes` con las propiedades y el idioma proporcionados.
-9. La función `listCountriesCodes` devuelve una matriz de objetos país basado en las propiedades e idioma proporcionados.
-10. Cada objeto país se asigna a un elemento `<opción>` en la entrada select.
-11. El contenido de cada opción se determina en función de la longitud del array `listOfProperties`.
-12. Si un objeto país es nulo, se muestra una opción vacía.
-13. Se devuelven los elementos JSX renderizados que representan la entrada select y sus opciones.
-___
+## Ejemplo de uso con un elemento select regular
+```javascript
+<SelectPhoneNumber
+  defaultCountryNumber={506}
+  listOfProperties={['nameCodeNumber']}
+  language="es"
+  label="Seleccionar país"
+  withReactSelect={false}
+/>
+```
+
+## Arreglo de propiedades que acepta el componente
+* `['name']` - Nombre del país en el idioma especificado.
+* `['name', 'codeNumber']` - Nombre del país en el idioma especificado y código numérico del país. 
+* `['nameCodeNumber', 'codeNumber']` - Código de país y código numérico del país.
+* `['name', 'codeNumber', 'nameCodeNumber']` - Nombre del país en el idioma especificado, código numérico del país y código de país.
+### Entradas
+
+* `defaultCountryNumber` (número): El número de teléfono del país predeterminado a mostrar en el menú desplegable.
+* `onChange` (función): Una función de devolución de llamada que se llamará cuando el valor seleccionado cambie.
+* `value` (string): El valor actualmente seleccionado.
+* `listOfProperties` (array): Una matriz de nombres de propiedades a mostrar en las opciones del menú desplegable.
+* `containerClassName` (string): Nombre de clase CSS para el elemento del contenedor.
+* `selectClassName` (string): Nombre de clase CSS para el elemento select.
+* `defaultStyles` (boolean): Indica si se deben aplicar estilos predeterminados a los elementos del contenedor y select.
+* `language` (string): El idioma a utilizar para los nombres de los países.
+* `label` (string): La etiqueta a mostrar encima del menú desplegable.
+* `labelClassName` (string): Nombre de clase CSS para el elemento de etiqueta.
+* `reactSelectCustomStyles` (object): Estilos personalizados a aplicar al componente `react-select`.
+* `reactSelectDefaultValues` (object): Valores predeterminados para el componente `react-select`.
+* `withReactSelect` (boolean): Indica si se debe usar el componente `react-select` en lugar de un elemento select regular.
+
+### Flujo
+
+1. Se llama a la función `listCountriesCodes` para generar una lista de códigos de país basados en las propiedades, el número de teléfono del país predeterminado y el idioma proporcionados.
+2. La lista de códigos de país se mapea a una matriz de objetos de opciones con propiedades `label` y `value`.
+3. Si `withReactSelect` es verdadero, se renderiza el componente `Select` de `react-select` con las opciones generadas, la devolución de llamada de cambio y los estilos personalizados.
+4. Si `withReactSelect` es falso, se renderiza un elemento select regular con las opciones generadas y otras propiedades.
+5. El componente devuelve el componente `Select` o el elemento select regular, según el valor de `withReactSelect`.
+
 ### Salidas
-El componente `SelectPhoneNumber` muestra un desplegable con opciones que representan números de teléfono de diferentes países. El valor seleccionado puede ser controlado usando la propiedad `value` y la llamada de retorno `onChange` puede ser usada para manejar cambios en el valor seleccionado. Las opciones mostradas en la entrada de selección se generan basándose en las propiedades y el idioma proporcionados. El componente también proporciona opciones para personalizar el estilo del contenedor y los elementos de selección.
-___
+
+La salida del componente `SelectPhoneNumber` es el componente `Select` de `react-select` o un elemento select regular, según el valor de la propiedad `withReactSelect`. El valor seleccionado se puede obtener a través de la devolución de llamada de cambio `onChange` o accediendo a la propiedad `value`.
+
+Espero que esta traducción te sea útil.
