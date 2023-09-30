@@ -1,12 +1,10 @@
 import React from 'react'
-import Select, { StylesConfig } from 'react-select';
+import Select, {StylesConfig } from 'react-select';
 import makeAnimated from 'react-select/animated';
-
 import { PropsList, listCountriesCodes } from "../utils/getCountries"
 
 interface SelectPhoneNumberProps {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onChange?: (value: any) => void;
+    onChange?: ( value:any ) => void;
     value?: string
     listOfProperties: PropsList,
     defaultCountryNumber: number,
@@ -46,7 +44,7 @@ const stylesSelect = {
     cursor: 'pointer',
     outline: 'none',
 }
-const SelectPhoneNumber = ({
+export const SelectPhoneNumber = ({
     defaultCountryNumber, onChange, value,
     listOfProperties, containerClassName,
     selectClassName, defaultStyles = true, language = 'es',
@@ -59,7 +57,7 @@ const SelectPhoneNumber = ({
     const list = listCountriesCodes(listOfProperties, defaultCountryNumber, language);
     const options = list.map((country) => {
         if (country) return { label: country[listOfProperties[0]], value: country }
-        else return null
+        else return null;
     });
     const animatedComponents = makeAnimated();
 
@@ -85,7 +83,7 @@ const SelectPhoneNumber = ({
                             fontSize: '1rem',
                             fontWeight: 'bold',
                             lineHeight: '1.5rem',
-                        } : {}}
+                        } : {}}react-select
                     className={labelClassName}
                 >
                     {label}
@@ -93,11 +91,9 @@ const SelectPhoneNumber = ({
                         style={defaultStyles ? stylesSelect : {}}
                         className={selectClassName}
                         value={value}
-                        onChange={
-                            (e) => {
-                                if (typeof onChange === 'function') onChange(e.target.value)
-                            }
-                        }
+                        onChange={(e) => {
+                            if (typeof onChange === 'function') onChange(e.target.value)
+                        }}
                     >
                         {
                             listCountriesCodes(listOfProperties, defaultCountryNumber, language).map((country, index) => {
@@ -122,9 +118,8 @@ const SelectPhoneNumber = ({
                                                     country[listOfProperties[0]]
                                                 } ({country[listOfProperties[1]]}) +{country[listOfProperties[2]]}</option>
                                     }
-                                }else{
-                                    return null
                                 }
+                                else return null
                             })
                         }
                     </select>
