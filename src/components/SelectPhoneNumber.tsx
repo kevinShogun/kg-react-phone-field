@@ -1,12 +1,12 @@
 import React from 'react'
-import Select, { ActionMeta, StylesConfig } from 'react-select';
+import Select, { StylesConfig } from 'react-select';
 import makeAnimated from 'react-select/animated';
-
 
 import { PropsList, listCountriesCodes } from "../utils/getCountries"
 
 interface SelectPhoneNumberProps {
-    onChange?: ((newValue: unknown, actionMeta: ActionMeta<unknown>) => void) | React.ChangeEventHandler<HTMLSelectElement>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onChange?: (value: any) => void;
     value?: string
     listOfProperties: PropsList,
     defaultCountryNumber: number,
@@ -46,7 +46,7 @@ const stylesSelect = {
     cursor: 'pointer',
     outline: 'none',
 }
-export const SelectPhoneNumber = ({
+const SelectPhoneNumber = ({
     defaultCountryNumber, onChange, value,
     listOfProperties, containerClassName,
     selectClassName, defaultStyles = true, language = 'es',
@@ -59,7 +59,7 @@ export const SelectPhoneNumber = ({
     const list = listCountriesCodes(listOfProperties, defaultCountryNumber, language);
     const options = list.map((country) => {
         if (country) return { label: country[listOfProperties[0]], value: country }
-        else return null;
+        else return null
     });
     const animatedComponents = makeAnimated();
 
@@ -67,9 +67,7 @@ export const SelectPhoneNumber = ({
         return (
             <Select
                 options={options}
-                onChange={() => {
-                    if (typeof onChange === 'function') onChange
-                }}
+                onChange={onChange}
                 components={animatedComponents}
                 styles={reactSelectCustomStyles}
                 defaultValue={reactSelectDefaultValues}
@@ -87,7 +85,7 @@ export const SelectPhoneNumber = ({
                             fontSize: '1rem',
                             fontWeight: 'bold',
                             lineHeight: '1.5rem',
-                        } : {}}react-select
+                        } : {}}
                     className={labelClassName}
                 >
                     {label}
@@ -95,7 +93,11 @@ export const SelectPhoneNumber = ({
                         style={defaultStyles ? stylesSelect : {}}
                         className={selectClassName}
                         value={value}
-
+                        onChange={
+                            (e) => {
+                                if (typeof onChange === 'function') onChange(e.target.value)
+                            }
+                        }
                     >
                         {
                             listCountriesCodes(listOfProperties, defaultCountryNumber, language).map((country, index) => {
@@ -120,8 +122,9 @@ export const SelectPhoneNumber = ({
                                                     country[listOfProperties[0]]
                                                 } ({country[listOfProperties[1]]}) +{country[listOfProperties[2]]}</option>
                                     }
+                                }else{
+                                    return null
                                 }
-                                else return null
                             })
                         }
                     </select>
