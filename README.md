@@ -57,5 +57,3 @@ Este código define un componente React llamado `SelectPhoneNumber` que renderiz
 ### Salidas
 
 La salida del componente `SelectPhoneNumber` es el componente `Select` de `react-select` o un elemento select regular, según el valor de la propiedad `withReactSelect`. El valor seleccionado se puede obtener a través de la devolución de llamada de cambio `onChange` o accediendo a la propiedad `value`.
-
-Espero que esta traducción te sea útil.
